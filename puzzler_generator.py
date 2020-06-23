@@ -1,4 +1,5 @@
 import cv2
+import random
 
 def preview_img(img):
     fraction = 0.5
@@ -10,8 +11,15 @@ def save_puzzles(puzzles):
     puzzle_count = len(puzzles)
     print("Saving {} puzzles".format(puzzle_count))
 
-    for idx, puzzle in enumerate(puzzles):
-        filename = "puzzles/Puzzle_{}.png".format(idx)
+    image_uid_set = set()
+    for puzzle in puzzles:
+        new_uid = random.randint(0,puzzle_count * 10)
+        # Ensure it is unique
+        while new_uid in image_uid_set:
+            new_uid = random.randint(0,puzzle_count * 10)
+
+        filename = "puzzles/Puzzle_{}.png".format(new_uid)
+        image_uid_set.add(new_uid)
         cv2.imwrite(filename, puzzle)
 
 
