@@ -1,7 +1,7 @@
 import cv2
 
 def preview_img(img):
-    fraction = 1
+    fraction = 0.5
     preview = cv2.resize(img, None, fx=fraction, fy=fraction)
     cv2.imshow("preview", preview)
     cv2.waitKey(0)
@@ -11,7 +11,7 @@ def save_puzzles(puzzles):
     print("Saving {} puzzles".format(puzzle_count))
 
     for idx, puzzle in enumerate(puzzles):
-        filename = "Puzzle_{}.png".format(idx)
+        filename = "puzzles/Puzzle_{}.png".format(idx)
         cv2.imwrite(filename, puzzle)
 
 
@@ -19,15 +19,18 @@ def main():
     filename = "elly.jpg"
 
     img = cv2.imread(filename)
+    # preview_img(img)
+    img = cv2.resize(img, None, fx=0.5, fy=0.5)
     height, width, _ = img.shape
     print("Image size: {}, {}".format(width, height))
     
     # Apply grid
-    grid_vert_count = 2#64
-    grid_hori_count = 2#20
+    grid_vert_count = 32
+    grid_hori_count = 16
 
     puzzlesize_width = width // grid_hori_count
     puzzlesize_height = height // grid_vert_count
+    print("puzzle width x height: {} x {}".format(puzzlesize_width, puzzlesize_height))
 
     puzzles = []
     for i in range(grid_vert_count):
