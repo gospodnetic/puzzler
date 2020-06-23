@@ -99,6 +99,7 @@ class Puzzler(tk.Frame):
         self.selection_max = [0, 0] # [x,y]
 
         self.selected = []
+        self.selection_rectangle = []
 
         self.canvas = tk.Canvas(self, width=self.image_width * 3, height=self.image_height, bg='steelblue',
             highlightthickness=0)
@@ -109,6 +110,14 @@ class Puzzler(tk.Frame):
         self.canvas.bind('<Button-3>', self.select_start)
         self.canvas.bind('<ButtonRelease-3>', self.select_done)
         self.canvas.bind('<Button3-Motion>', self.select_move)
+
+    def __selection_rectangle(self):
+        self.canvas.delete(self.selection_rectangle)
+        min_x = self.selection_min[0]
+        min_y = self.selection_min[1]
+        max_x = self.selection_max[0]
+        max_y = self.selection_max[1]
+        self.selection_rectangle = self.canvas.create_rectangle(min_x, min_y, max_x, max_y)
 
     def move_selected_puzzles(self, event):
         global MULTISELECT_ACTIVE
@@ -139,6 +148,8 @@ class Puzzler(tk.Frame):
             self.selection_min[1] = event.y
             self.selection_max[1] = self.selection_start[1]
 
+        self.__selection_rectangle()
+
         self.__find_selected()
 
         print("{} puzzles selected    ".format(len(self.selected)), end="\r")
@@ -152,6 +163,8 @@ class Puzzler(tk.Frame):
 
     def select_done(self, event):
         global MULTISELECT_ACTIVE
+        
+        self.canvas.delete(self.selection_rectangle)
         if len(self.selected) == 0:
             MULTISELECT_ACTIVE = False
 
